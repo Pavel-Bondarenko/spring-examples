@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:application.properties"/>
+    </bean>
+
+    <bean id="pickupBody" class="org.example.body.PickupBody" primary="true"/>
+    <bean id="sedanBody" class="org.example.body.SedanBody"/>
+
+    <bean id="twinEngine" class="org.example.engine.TwinCylinderEngine" scope="prototype"/>
+    <bean id="fourEngine" class="org.example.engine.FourCylinderEngine" primary="true"/>
+
+    <bean id="classicStyle" class="org.example.style.Style" primary="true">
+        <property name="name" value="classic"/>
+    </bean>
+    <bean id="modernStyle" class="org.example.style.Style">
+        <property name="name" value="modern"/>
+    </bean>
+    <bean id="myStyle" class="org.example.style.Style">
+        <property name="name" value="${my.style}"/>
+    </bean>
+
+    <bean id="pickup" class="org.example.car.PickupCar">
+        <constructor-arg ref="pickupBody"/>
+        <constructor-arg ref="twinEngine"/>
+        <constructor-arg ref="modernStyle"/>
+    </bean>
+
+    <bean id="sedan" class="org.example.car.SedanCar" lazy-init="true">
+        <property name="body" ref="sedanBody"/>
+        <property name="engine" ref="twinEngine"/>
+        <property name="style" ref="myStyle"/>
+    </bean>
+
+    <bean id="autoPickup" class="org.example.car.PickupCar" autowire="constructor"/>
+
+    <bean id="custom" class="org.example.car.CustomCar" autowire="constructor">
+        <property name="name" value="${name}"/>
+        <property name="weight" value="${weight}"/>
+    </bean>
+</beans>
